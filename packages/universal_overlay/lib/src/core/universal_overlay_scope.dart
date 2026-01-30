@@ -81,22 +81,17 @@ class _UniversalOverlayScopeState extends State<UniversalOverlayScope>
     super.dispose();
   }
 
-  void _ensureManager(UniversalOverlayThemeData? inheritedTheme) {
+  void _ensureManager(UniversalOverlayThemeData inheritedTheme) {
     if (_manager == null) {
       final overlayState = _overlayKey.currentState;
       if (overlayState != null) {
         _manager = OverlayManager(
           overlayState: overlayState,
           vsync: this,
-          defaultToastTheme: widget.toastTheme ??
-              inheritedTheme?.toastTheme ??
-              const ToastThemeData(),
-          defaultLoadingTheme: widget.loadingTheme ??
-              inheritedTheme?.loadingTheme ??
-              const LoadingThemeData(),
-          defaultCustomTheme: widget.customTheme ??
-              inheritedTheme?.customTheme ??
-              const CustomOverlayThemeData(),
+          defaultToastTheme: widget.toastTheme ?? inheritedTheme.toastTheme,
+          defaultLoadingTheme:
+              widget.loadingTheme ?? inheritedTheme.loadingTheme,
+          defaultCustomTheme: widget.customTheme ?? inheritedTheme.customTheme,
         );
       }
     }
@@ -105,18 +100,12 @@ class _UniversalOverlayScopeState extends State<UniversalOverlayScope>
   @override
   Widget build(BuildContext context) {
     // Try to get theme from UniversalOverlayTheme if available
-    final inheritedTheme = UniversalOverlayTheme.maybeOf(context);
+    final inheritedTheme = UniversalOverlayTheme.of(context);
 
     // Resolve final themes (widget props take precedence over inherited theme)
-    final toastTheme = widget.toastTheme ??
-        inheritedTheme?.toastTheme ??
-        const ToastThemeData();
-    final loadingTheme = widget.loadingTheme ??
-        inheritedTheme?.loadingTheme ??
-        const LoadingThemeData();
-    final customTheme = widget.customTheme ??
-        inheritedTheme?.customTheme ??
-        const CustomOverlayThemeData();
+    final toastTheme = widget.toastTheme ?? inheritedTheme.toastTheme;
+    final loadingTheme = widget.loadingTheme ?? inheritedTheme.loadingTheme;
+    final customTheme = widget.customTheme ?? inheritedTheme.customTheme;
 
     return _UniversalOverlayInherited(
       getController: () {

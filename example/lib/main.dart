@@ -166,7 +166,9 @@ class HomePage extends StatelessWidget {
                   onPressed: () {
                     UniversalOverlay.of(context).showToast(
                       content: const ToastContent(message: 'Toast at top!'),
-                      theme: const ToastThemeData(position: OverlayPosition.top),
+                      theme: const ToastThemeData(
+                        position: OverlayPosition.top,
+                      ),
                     );
                   },
                 ),
