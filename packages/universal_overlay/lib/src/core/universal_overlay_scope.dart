@@ -6,7 +6,7 @@ import 'universal_overlay_controller.dart';
 
 /// The root widget that provides overlay functionality to the widget tree.
 ///
-/// Wrap your app content with [UniversalOverlayScope] to enable overlay features.
+/// Wrap your app content with [UniversalOverlay] to enable overlay features.
 ///
 /// You can also wrap your app with [UniversalOverlayTheme] for app-wide theming:
 ///
@@ -18,7 +18,7 @@ import 'universal_overlay_controller.dart';
 ///   ),
 ///   child: MaterialApp(
 ///     builder: (context, child) {
-///       return UniversalOverlayScope(
+///       return UniversalOverlay(
 ///         child: child!,
 ///       );
 ///     },
@@ -27,12 +27,12 @@ import 'universal_overlay_controller.dart';
 /// )
 /// ```
 ///
-/// Or configure theme directly on [UniversalOverlayScope]:
+/// Or configure theme directly on [UniversalOverlay]:
 ///
 /// ```dart
 /// MaterialApp(
 ///   builder: (context, child) {
-///     return UniversalOverlayScope(
+///     return UniversalOverlay(
 ///       toastTheme: ToastThemeData(...),
 ///       child: child!,
 ///     );
@@ -40,10 +40,20 @@ import 'universal_overlay_controller.dart';
 ///   home: HomePage(),
 /// )
 /// ```
+///
+/// ## Accessing the Controller
+///
+/// Use `UniversalOverlay.of(context)` to access the controller:
+///
+/// ```dart
+/// UniversalOverlay.of(context).showToast(
+///   content: ToastContent(message: "Hello!"),
+/// );
+/// ```
 @immutable
-class UniversalOverlayScope extends StatefulWidget {
-  /// Creates a universal overlay scope.
-  const UniversalOverlayScope({
+class UniversalOverlay extends StatefulWidget {
+  /// Creates a universal overlay.
+  const UniversalOverlay({
     super.key,
     required this.child,
     this.toastTheme,
@@ -66,35 +76,83 @@ class UniversalOverlayScope extends StatefulWidget {
   /// If not provided, will try to use [UniversalOverlayTheme] from context.
   final CustomOverlayThemeData? customTheme;
 
+  /// Gets the [UniversalOverlayController] from the given [context].
+  ///
+  /// Throws an assertion error if no [UniversalOverlay] is found or if
+  /// the overlay is not yet initialized.
+  static UniversalOverlayController of(BuildContext context) {
+    final inherited = context
+        .dependOnInheritedWidgetOfExactType<_UniversalOverlayInherited>();
+    assert(
+      inherited != null,
+      'No UniversalOverlay found in context. '
+      'Wrap your app with UniversalOverlay.',
+    );
+    assert(
+      inherited!.controller != null,
+      'UniversalOverlay is not yet initialized. '
+      'Make sure you are not calling UniversalOverlay.of() during build '
+      'of the same widget that contains UniversalOverlay.',
+    );
+    return inherited!.controller!;
+  }
+
+  /// Gets the [UniversalOverlayController] from the given [context],
+  /// or null if no [UniversalOverlay] is found or not yet initialized.
+  static UniversalOverlayController? maybeOf(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<_UniversalOverlayInherited>()
+        ?.controller;
+  }
+
   @override
-  State<UniversalOverlayScope> createState() => _UniversalOverlayScopeState();
+  State<UniversalOverlay> createState() => _UniversalOverlayState();
 }
 
-class _UniversalOverlayScopeState extends State<UniversalOverlayScope>
+class _UniversalOverlayState extends State<UniversalOverlay>
     with TickerProviderStateMixin {
   final GlobalKey<OverlayState> _overlayKey = GlobalKey<OverlayState>();
   OverlayManager? _manager;
 
   @override
+  void initState() {
+    super.initState();
+    // Schedule manager creation after the first frame when Overlay is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeManager();
+    });
+  }
+
+  void _initializeManager() {
+    if (_manager != null) return;
+
+    final overlayState = _overlayKey.currentState;
+    if (overlayState == null) {
+      // This should not happen if used correctly
+      throw StateError(
+        'Overlay not found. This is an internal error in UniversalOverlay.',
+      );
+    }
+
+    final inheritedTheme = UniversalOverlayTheme.of(context);
+    _manager = OverlayManager(
+      overlayState: overlayState,
+      vsync: this,
+      defaultToastTheme: widget.toastTheme ?? inheritedTheme.toastTheme,
+      defaultLoadingTheme: widget.loadingTheme ?? inheritedTheme.loadingTheme,
+      defaultCustomTheme: widget.customTheme ?? inheritedTheme.customTheme,
+    );
+
+    // Trigger rebuild to provide the initialized manager
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   void dispose() {
     _manager?.dispose();
     super.dispose();
-  }
-
-  void _ensureManager(UniversalOverlayThemeData inheritedTheme) {
-    if (_manager == null) {
-      final overlayState = _overlayKey.currentState;
-      if (overlayState != null) {
-        _manager = OverlayManager(
-          overlayState: overlayState,
-          vsync: this,
-          defaultToastTheme: widget.toastTheme ?? inheritedTheme.toastTheme,
-          defaultLoadingTheme:
-              widget.loadingTheme ?? inheritedTheme.loadingTheme,
-          defaultCustomTheme: widget.customTheme ?? inheritedTheme.customTheme,
-        );
-      }
-    }
   }
 
   @override
@@ -108,10 +166,7 @@ class _UniversalOverlayScopeState extends State<UniversalOverlayScope>
     final customTheme = widget.customTheme ?? inheritedTheme.customTheme;
 
     return _UniversalOverlayInherited(
-      getController: () {
-        _ensureManager(inheritedTheme);
-        return _manager!;
-      },
+      controller: _manager,
       toastTheme: toastTheme,
       loadingTheme: loadingTheme,
       customTheme: customTheme,
@@ -131,54 +186,22 @@ class _UniversalOverlayScopeState extends State<UniversalOverlayScope>
 class _UniversalOverlayInherited extends InheritedWidget {
   const _UniversalOverlayInherited({
     required super.child,
-    required this.getController,
+    required this.controller,
     required this.toastTheme,
     required this.loadingTheme,
     required this.customTheme,
   });
 
-  final UniversalOverlayController Function() getController;
+  final UniversalOverlayController? controller;
   final ToastThemeData toastTheme;
   final LoadingThemeData loadingTheme;
   final CustomOverlayThemeData customTheme;
 
-  static _UniversalOverlayInherited? maybeOf(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<_UniversalOverlayInherited>();
-  }
-
-  static _UniversalOverlayInherited of(BuildContext context) {
-    final inherited = maybeOf(context);
-    assert(
-      inherited != null,
-      'No UniversalOverlayScope found in context. '
-      'Wrap your app with UniversalOverlayScope.',
-    );
-    return inherited!;
-  }
-
   @override
   bool updateShouldNotify(_UniversalOverlayInherited oldWidget) {
-    return toastTheme != oldWidget.toastTheme ||
+    return controller != oldWidget.controller ||
+        toastTheme != oldWidget.toastTheme ||
         loadingTheme != oldWidget.loadingTheme ||
         customTheme != oldWidget.customTheme;
-  }
-}
-
-/// Internal access helper for UniversalOverlay.
-class UniversalOverlayAccess {
-  UniversalOverlayAccess._();
-
-  /// Gets the [UniversalOverlayController] from the given [context].
-  static UniversalOverlayController of(BuildContext context) {
-    final scope = _UniversalOverlayInherited.of(context);
-    return scope.getController();
-  }
-
-  /// Gets the [UniversalOverlayController] from the given [context],
-  /// or null if no [UniversalOverlayScope] is found.
-  static UniversalOverlayController? maybeOf(BuildContext context) {
-    final scope = _UniversalOverlayInherited.maybeOf(context);
-    return scope?.getController();
   }
 }

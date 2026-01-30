@@ -44,7 +44,7 @@ void main() {
       ),
       child: MaterialApp(
         builder: (context, child) {
-          return UniversalOverlayScope(
+          return UniversalOverlay(
             child: child!,
           );
         },

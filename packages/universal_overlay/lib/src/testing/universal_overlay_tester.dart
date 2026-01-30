@@ -11,8 +11,8 @@ class UniversalOverlayTester {
 
   /// Gets a tester from widget tester.
   static UniversalOverlayTester of(WidgetTester tester) {
-    final element = tester.element(find.byType(UniversalOverlayScope));
-    final controller = UniversalOverlayAccess.of(element);
+    final element = tester.element(find.byType(UniversalOverlay));
+    final controller = UniversalOverlay.of(element);
     return UniversalOverlayTester._(controller);
   }
 

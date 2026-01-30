@@ -9,7 +9,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          builder: (context, child) => UniversalOverlayScope(child: child!),
+          builder: (context, child) => UniversalOverlay(child: child!),
           home: Builder(
             builder: (context) => Scaffold(
               body: ElevatedButton(
@@ -28,6 +28,9 @@ void main() {
         ),
       );
 
+      // Pump to trigger addPostFrameCallback for manager initialization
+      await tester.pump();
+
       await tester.tap(find.text('Show Toast'));
       await tester.pumpAndSettle();
 
@@ -43,7 +46,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          builder: (context, child) => UniversalOverlayScope(child: child!),
+          builder: (context, child) => UniversalOverlay(child: child!),
           home: Builder(
             builder: (context) => Scaffold(
               body: ElevatedButton(
@@ -58,6 +61,9 @@ void main() {
           ),
         ),
       );
+
+      // Pump to trigger addPostFrameCallback for manager initialization
+      await tester.pump();
 
       await tester.tap(find.text('Show Loading'));
       // Can't use pumpAndSettle because CircularProgressIndicator runs indefinitely
@@ -79,7 +85,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          builder: (context, child) => UniversalOverlayScope(child: child!),
+          builder: (context, child) => UniversalOverlay(child: child!),
           home: Builder(
             builder: (context) => Scaffold(
               body: ElevatedButton(
@@ -111,6 +117,9 @@ void main() {
         ),
       );
 
+      // Pump to trigger addPostFrameCallback for manager initialization
+      await tester.pump();
+
       await tester.tap(find.text('Show Custom'));
       await tester.pumpAndSettle();
 
@@ -124,7 +133,7 @@ void main() {
     testWidgets('dismissAll clears all overlays', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          builder: (context, child) => UniversalOverlayScope(child: child!),
+          builder: (context, child) => UniversalOverlay(child: child!),
           home: Builder(
             builder: (context) => Scaffold(
               body: Column(
@@ -152,6 +161,9 @@ void main() {
           ),
         ),
       );
+
+      // Pump to trigger addPostFrameCallback for manager initialization
+      await tester.pump();
 
       await tester.tap(find.text('Show Toast'));
       await tester.pumpAndSettle();

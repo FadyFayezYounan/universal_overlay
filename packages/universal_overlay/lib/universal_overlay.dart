@@ -17,7 +17,7 @@
 ///   ),
 ///   child: MaterialApp(
 ///     builder: (context, child) {
-///       return UniversalOverlayScope(
+///       return UniversalOverlay(
 ///         child: child!,
 ///       );
 ///     },
@@ -26,12 +26,12 @@
 /// )
 /// ```
 ///
-/// Or use [UniversalOverlayScope] directly with theme configuration:
+/// Or use [UniversalOverlay] directly with theme configuration:
 ///
 /// ```dart
 /// MaterialApp(
 ///   builder: (context, child) {
-///     return UniversalOverlayScope(
+///     return UniversalOverlay(
 ///       toastTheme: ToastThemeData(...),
 ///       child: child!,
 ///     );
@@ -67,11 +67,10 @@ library;
 export 'package:universal_overlay_theme/universal_overlay_theme.dart';
 
 // Core
-export 'src/core/universal_overlay.dart';
 export 'src/core/universal_overlay_controller.dart';
 export 'src/core/universal_overlay_item.dart' show UniversalOverlayItem;
-export 'src/core/universal_overlay_scope.dart'
-    show UniversalOverlayScope, UniversalOverlayAccess;
+// Exports UniversalOverlay and deprecated aliases for backward compatibility
+export 'src/core/universal_overlay_scope.dart';
 
 // Toast
 export 'src/toast/toast_action.dart';

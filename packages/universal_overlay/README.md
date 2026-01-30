@@ -28,7 +28,7 @@ dependencies:
 
 ### Basic Setup
 
-Wrap your app with `UniversalOverlayScope`:
+Wrap your app with `UniversalOverlay`:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       builder: (context, child) {
-        return UniversalOverlayScope(
+        return UniversalOverlay(
           toastTheme: ToastThemeData(
             position: OverlayPosition.bottom,
             displayMode: ToastDisplayMode.queue,
@@ -256,7 +256,7 @@ The package includes testing utilities:
 testWidgets('shows toast', (tester) async {
   await tester.pumpWidget(
     MaterialApp(
-      builder: (context, child) => UniversalOverlayScope(child: child!),
+      builder: (context, child) => UniversalOverlay(child: child!),
       home: MyWidget(),
     ),
   );

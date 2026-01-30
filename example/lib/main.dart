@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       builder: (context, child) {
-        return UniversalOverlayScope(
+        return UniversalOverlay(
           toastTheme: const ToastThemeData(
             displayMode: ToastDisplayMode.replace,
             position: OverlayPosition.bottom,
