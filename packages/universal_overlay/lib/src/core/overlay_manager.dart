@@ -388,7 +388,7 @@ class OverlayManager implements UniversalOverlayController {
 
   @override
   void dismissAllToasts() {
-    for (final overlay in List.from(_activeOverlays.values)) {
+    for (final overlay in List<_ActiveOverlay>.from(_activeOverlays.values)) {
       if (overlay.type == _OverlayType.toast) {
         _dismissToast(overlay.item.id, DismissalReason.programmatic);
       }
@@ -401,7 +401,7 @@ class OverlayManager implements UniversalOverlayController {
 
   @override
   void dismissAllLoading() {
-    for (final overlay in List.from(_activeOverlays.values)) {
+    for (final overlay in List<_ActiveOverlay>.from(_activeOverlays.values)) {
       if (overlay.type == _OverlayType.loading) {
         _dismissLoading(overlay.item.id, DismissalReason.programmatic);
       }
@@ -410,7 +410,7 @@ class OverlayManager implements UniversalOverlayController {
 
   @override
   void dismissAllCustom() {
-    for (final overlay in List.from(_activeOverlays.values)) {
+    for (final overlay in List<_ActiveOverlay>.from(_activeOverlays.values)) {
       if (overlay.type == _OverlayType.custom) {
         _dismissCustom(overlay.item.id, DismissalReason.programmatic);
       }
