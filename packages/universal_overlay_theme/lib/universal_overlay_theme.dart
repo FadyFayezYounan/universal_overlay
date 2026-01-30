@@ -59,4 +59,3 @@ export 'src/models/stack_config.dart';
 
 // Animations
 export 'src/animations/overlay_animation_builder.dart';
-

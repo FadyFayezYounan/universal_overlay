@@ -52,9 +52,8 @@ class UniversalOverlayTheme extends StatelessWidget {
   ///
   /// Returns null if no [UniversalOverlayTheme] is found in the widget tree.
   static UniversalOverlayThemeData? maybeOf(BuildContext context) {
-    final _UniversalOverlayInheritedTheme? inheritedTheme =
-        context.dependOnInheritedWidgetOfExactType<
-            _UniversalOverlayInheritedTheme>();
+    final _UniversalOverlayInheritedTheme? inheritedTheme = context
+        .dependOnInheritedWidgetOfExactType<_UniversalOverlayInheritedTheme>();
     return inheritedTheme?.theme.data;
   }
 
@@ -90,7 +89,8 @@ final class _UniversalOverlayInheritedTheme extends InheritedTheme {
   final UniversalOverlayTheme theme;
 
   @override
-  bool updateShouldNotify(covariant _UniversalOverlayInheritedTheme oldWidget) =>
+  bool updateShouldNotify(
+          covariant _UniversalOverlayInheritedTheme oldWidget) =>
       theme.data != oldWidget.theme.data;
 
   @override
