@@ -227,7 +227,14 @@ packages:
   universal_overlay:
     dependency: "direct main"
     description:
-      path: ".."
+      path: "../packages/universal_overlay"
+      relative: true
+    source: path
+    version: "1.0.0"
+  universal_overlay_theme:
+    dependency: transitive
+    description:
+      path: "../packages/universal_overlay_theme"
       relative: true
     source: path
     version: "1.0.0"

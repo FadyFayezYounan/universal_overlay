@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return UniversalOverlayScope(
           toastTheme: const ToastThemeData(
-            displayMode: ToastDisplayMode.queue,
+            displayMode: ToastDisplayMode.replace,
             position: OverlayPosition.bottom,
           ),
           loadingTheme: const LoadingThemeData(barrierColor: Colors.black54),
@@ -155,7 +155,9 @@ class HomePage extends StatelessWidget {
                           color: Colors.blue,
                         ),
                       ),
-                      config: const ToastConfig(duration: Duration(seconds: 6)),
+                      theme: const ToastThemeData(
+                        duration: Duration(seconds: 6),
+                      ),
                     );
                   },
                 ),
@@ -164,7 +166,7 @@ class HomePage extends StatelessWidget {
                   onPressed: () {
                     UniversalOverlay.of(context).showToast(
                       content: const ToastContent(message: 'Toast at top!'),
-                      config: const ToastConfig(position: OverlayPosition.top),
+                      theme: const ToastThemeData(position: OverlayPosition.top),
                     );
                   },
                 ),
@@ -173,7 +175,7 @@ class HomePage extends StatelessWidget {
                   onPressed: () {
                     UniversalOverlay.of(context).showToast(
                       content: const ToastContent(message: 'Bouncy toast!'),
-                      config: ToastConfig(
+                      theme: ToastThemeData(
                         animationBuilder: OverlayAnimations.bounce(),
                       ),
                     );
@@ -255,10 +257,10 @@ class HomePage extends StatelessWidget {
                           ),
                         );
                       },
-                      config: CustomOverlayConfig(
+                      theme: const CustomOverlayThemeData(
                         position: OverlayPosition.center,
-                        dismissalTypes: const {DismissalType.tapOutside},
-                        barrier: const BarrierConfig(
+                        dismissalTypes: {DismissalType.tapOutside},
+                        barrier: BarrierConfig(
                           color: Colors.black54,
                           dismissible: true,
                         ),

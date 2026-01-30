@@ -37,7 +37,7 @@ dependencies:
 
   # Reference to the parent package
   universal_overlay:
-    path: ../
+    path: ../packages/universal_overlay
 
 dev_dependencies:
   flutter_test:
