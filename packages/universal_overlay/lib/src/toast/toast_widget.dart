@@ -107,7 +107,7 @@ class _ToastWidgetState extends State<ToastWidget> {
   }
 
   Widget _buildToastContent(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.brightnessOf(context) == Brightness.dark;
     final resolvedTheme = widget.theme.resolve(
       isDark ? Brightness.dark : Brightness.light,
     );
@@ -116,8 +116,7 @@ class _ToastWidgetState extends State<ToastWidget> {
         (isDark ? const Color(0xFF323232) : const Color(0xFF323232));
     final textStyle = resolvedTheme.textStyle ??
         const TextStyle(color: Colors.white, fontSize: 14);
-    final borderRadius =
-        resolvedTheme.borderRadius ?? BorderRadius.circular(8);
+    final borderRadius = resolvedTheme.borderRadius ?? BorderRadius.circular(8);
     final elevation = resolvedTheme.elevation ?? 6;
     final padding = resolvedTheme.padding ??
         const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
@@ -134,10 +133,9 @@ class _ToastWidgetState extends State<ToastWidget> {
         borderRadius: borderRadius,
         child: InkWell(
           borderRadius: borderRadius,
-          onTap:
-              widget.theme.dismissalTypes.contains(DismissalType.tapOverlay)
-                  ? () => widget.onDismiss(DismissalReason.tapOverlay)
-                  : widget.callbacks.onTap,
+          onTap: widget.theme.dismissalTypes.contains(DismissalType.tapOverlay)
+              ? () => widget.onDismiss(DismissalReason.tapOverlay)
+              : widget.callbacks.onTap,
           child: Container(
             padding: padding,
             decoration: BoxDecoration(
