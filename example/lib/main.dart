@@ -218,44 +218,46 @@ class HomePage extends StatelessWidget {
                   onPressed: () {
                     UniversalOverlay.of(context).showCustom(
                       builder: (context, item) {
-                        return Container(
-                          margin: const EdgeInsets.all(32),
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.2),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.rocket_launch,
-                                size: 48,
-                                color: Colors.deepPurple,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Custom Overlay',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                'This is a fully customizable overlay!',
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 24),
-                              FilledButton(
-                                onPressed: () => item.dismiss(),
-                                child: const Text('Close'),
-                              ),
-                            ],
+                        return Material(
+                          child: Container(
+                            margin: const EdgeInsets.all(32),
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.2),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.rocket_launch,
+                                  size: 48,
+                                  color: Colors.deepPurple,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Custom Overlay',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                const SizedBox(height: 8),
+                                const Text(
+                                  'This is a fully customizable overlay!',
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 24),
+                                FilledButton(
+                                  onPressed: () => item.dismiss(),
+                                  child: const Text('Close'),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },

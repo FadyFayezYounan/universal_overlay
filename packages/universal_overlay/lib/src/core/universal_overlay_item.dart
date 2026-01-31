@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../shared/enums/dismissal_reason.dart';
 
 /// Controller for an individual overlay item.
@@ -39,6 +41,9 @@ final class UniversalOverlayItemImpl implements UniversalOverlayItem {
 
   DismissalReason? _dismissalReason;
 
+  final Completer<DismissalReason> _dismissalCompleter =
+      Completer<DismissalReason>();
+
   final List<void Function(DismissalReason)> _dismissalCallbacks = [];
 
   @override
@@ -60,12 +65,7 @@ final class UniversalOverlayItemImpl implements UniversalOverlayItem {
       return Future.value(_dismissalReason);
     }
 
-    return Future(() async {
-      while (_dismissalReason == null) {
-        await Future.delayed(const Duration(milliseconds: 10));
-      }
-      return _dismissalReason!;
-    });
+    return _dismissalCompleter.future;
   }
 
   /// Mark the item as shown (no longer pending).
@@ -80,6 +80,9 @@ final class UniversalOverlayItemImpl implements UniversalOverlayItem {
     _isPending = false;
     _isDismissed = true;
     _dismissalReason = reason;
+    if (!_dismissalCompleter.isCompleted) {
+      _dismissalCompleter.complete(reason);
+    }
     for (final callback in _dismissalCallbacks) {
       callback(reason);
     }

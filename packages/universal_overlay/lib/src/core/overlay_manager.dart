@@ -17,7 +17,7 @@ import 'universal_overlay_controller.dart';
 import 'universal_overlay_item.dart';
 
 /// Pending toast entry waiting in queue.
-class _PendingToast {
+final class _PendingToast {
   _PendingToast({
     required this.item,
     required this.content,
@@ -32,7 +32,7 @@ class _PendingToast {
 }
 
 /// Active overlay entry.
-class _ActiveOverlay {
+final class _ActiveOverlay {
   _ActiveOverlay({
     required this.item,
     required this.entry,
@@ -50,7 +50,7 @@ class _ActiveOverlay {
 enum _OverlayType { toast, loading, custom }
 
 /// Internal overlay manager.
-class OverlayManager implements UniversalOverlayController {
+final class OverlayManager implements UniversalOverlayController {
   OverlayManager({
     required this.overlayState,
     required this.vsync,
@@ -128,7 +128,7 @@ class OverlayManager implements UniversalOverlayController {
 
       case ToastDisplayMode.replace:
         // Dismiss all current toasts
-        for (final toast in List.from(_visibleToasts)) {
+        for (final toast in List<_ActiveOverlay>.from(_visibleToasts)) {
           _dismissToast(toast.item.id, DismissalReason.replaced);
         }
         _showToastImmediately(item, content, mergedCallbacks, mergedTheme);
